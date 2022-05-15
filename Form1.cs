@@ -17,6 +17,7 @@ namespace CS_lab3
         private DataSet dataSet = null;
         private NpgsqlDataAdapter providerDataAdapter = null;
         private NpgsqlDataAdapter productDataAdapter = null;
+        private NpgsqlDataAdapter deliveryDataAdapter = null; 
         private ConnectForm connectForm = null;
         private ProviderForm providerForm = null;
         private ProductForm productForm = null;
@@ -41,7 +42,7 @@ namespace CS_lab3
             productDataAdapter = new NpgsqlDataAdapter("SELECT product.id, product.name, product.count, " +
                 "product.price, product.provider_id " + "FROM product, provider " + 
                 "WHERE product.provider_id = provider.id and provider.name = '" + provider_name + "'", connection);
-            new NpgsqlCommandBuilder(productDataAdapter);
+            //new NpgsqlCommandBuilder(productDataAdapter);
             productDataAdapter.Fill(dataSet, "Products");
             dataGridView2.DataSource = GetDataSet().Tables["Products"];
         }
@@ -74,6 +75,7 @@ namespace CS_lab3
                 dataSet = new DataSet();
                 dataSet.Tables.Add("Providers");
                 dataSet.Tables.Add("Products");
+                dataSet.Tables.Add("Delivery"); 
             }
             return dataSet; 
         }
@@ -240,5 +242,27 @@ namespace CS_lab3
         }
 
         //--------------- End of ProductForm methods ---------------------------------//
+
+        // new methods for lab3def 
+        // click on product
+
+        private void FillDataGridView3Delivery(int provider_id, int product_id)
+        {
+            GetDataSet().Tables["Delivery"].Clear();
+            deliveryDataAdapter = new NpgsqlDataAdapter("SELECT * FROM delivery where " +
+                "delivery.provider_id = " + provider_id.ToString() + " and delivery.product_id = " + provider_id.ToString(), connection);
+            new NpgsqlCommandBuilder(deliveryDataAdapter);
+            deliveryDataAdapter.Fill(dataSet, "Delivery");
+            dataGridView3.DataSource = GetDataSet().Tables["Delivery"];
+        }
+
+        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            int provider_ind = dataGridView1.SelectedCells[0].RowIndex;
+            int product_ind = dataGridView2.SelectedCells[0].RowIndex;
+            FillDataGridView3Delivery((int)dataGridView1.Rows[provider_ind].Cells[0].Value, 
+                                        (int)dataGridView2.Rows[product_ind].Cells[0].Value);
+        }
+
     }
 }

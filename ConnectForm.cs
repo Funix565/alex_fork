@@ -28,16 +28,16 @@ namespace CS_lab3
         private void button1_Click(object sender, EventArgs e)
         {
             string host, db, user, pass;
-            int port = Int32.Parse(textBox2.Text);
-            host = textBox1.Text;
-            db = textBox3.Text;
-            user = textBox4.Text;
-            pass = textBox5.Text;
-            //int port = 5432;
-            /*host = "localhost";
+            /* int port = Int32.Parse(textBox2.Text);
+             host = textBox1.Text;
+             db = textBox3.Text;
+             user = textBox4.Text;
+             pass = textBox5.Text;*/
+            int port = 5432;
+            host = "localhost";
             db = "csharp";
             user = "postgres";
-            pass = "123"; */
+            pass = "123";
             parent.Connect(host, port, db, user, pass);
             parent.GetProductForm().updateProviders(); 
             parent.FillDataGridView1ByProviders();
