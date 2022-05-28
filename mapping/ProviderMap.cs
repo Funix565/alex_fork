@@ -18,7 +18,8 @@ namespace WindowsFormsApp1.mapping
             Id(x => x.Id).GeneratedBy.Native();
             Map(x => x.Name);
             Map(x => x.Country);
-            HasMany(x => x.Products).Inverse().Cascade.All().KeyColumn("provider_id");
+            HasMany(x => x.Products).Inverse().Cascade.All().Table("product");
+            HasMany(x => x.Deliveries).Inverse().Cascade.All().Table("delivery");
         }
        
     }

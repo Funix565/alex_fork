@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using WindowsFormsApp1.domain;
 using WindowsFormsApp1.dao;
 using WindowsFormsApp1.mapping;
+using NHibernate.Cfg;
 
 namespace WindowsFormsApp1
 {
@@ -23,6 +24,8 @@ namespace WindowsFormsApp1
         public Form1()
         {
             InitializeComponent();
+            Configuration cfg = new Configuration().SetProperty("hibernate.show_sql", "true");
+
         }
 
         // -------------------- Methods related with connection ------------------------------//
@@ -253,10 +256,43 @@ namespace WindowsFormsApp1
         {
             this.dataGridView1.Columns["ProviderNameColumn"].Width = (this.dataGridView1.Width / 2) - 1;
             this.dataGridView1.Columns["ProviderCountryColumn"].Width = (this.dataGridView1.Width / 2) - 1;
-            this.dataGridView2.Columns["ProductNameColumn"].Width = (int)(this.dataGridView2.Width * 0.5) - 1;
-            this.dataGridView2.Columns["ProductCountColumn"].Width = (int)(this.dataGridView2.Width * 0.25) - 1;
-            this.dataGridView2.Columns["ProductPriceColumn"].Width = (int)(this.dataGridView2.Width * 0.25) - 1;
+            this.dataGridView2.Columns["ProductNameColumn"].Width = (this.groupBox2.Width / 2) - 1;
+            this.dataGridView2.Columns["ProductCountColumn"].Width = (this.groupBox2.Width / 4) - 1;
+            this.dataGridView2.Columns["ProductPriceColumn"].Width = (this.groupBox2.Width / 4) - 1;
+            this.dataGridView3.Columns["OrderDateColumn"].Width = (this.groupBox3.Width / 2) - 1;
+            this.dataGridView3.Columns["OrderQuantityColumn"].Width = (this.groupBox3.Width / 2) - 1;
         }
 
+        public void fillDataGridView3(string provider, string product)
+        {
+            dataGridView3.Rows.Clear();
+            AbsDAOFactory dao = new FactoryDAO(session);
+            IProviderDAO providerDAO = dao.GetProviderDAO();
+            IList<Delivery> deliveries = providerDAO.GetProviderByName(provider).Deliveries.Where(x => x.Product.Name == product).ToList(); 
+            DataGridViewRow row;
+            DataGridViewTextBoxCell cell1, cell2;
+            foreach (Delivery o in deliveries)
+            {
+                row = new DataGridViewRow();
+                cell1 = new DataGridViewTextBoxCell();
+                cell2 = new DataGridViewTextBoxCell();
+                cell1.ValueType = typeof(string);
+                cell1.Value = o.Date;
+                cell2.ValueType = typeof(int);
+                cell2.Value = o.quantity;
+                row.Cells.Add(cell1);
+                row.Cells.Add(cell2);
+                dataGridView3.Rows.Add(row);
+            }
+        }
+
+        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            int selectedRow = dataGridView1.SelectedCells[0].RowIndex;
+            string provider = (string)dataGridView1.Rows[selectedRow].Cells[0].Value;
+            selectedRow = dataGridView2.SelectedCells[0].RowIndex;
+            string product = (string)dataGridView2.Rows[selectedRow].Cells[0].Value;
+            fillDataGridView3(provider, product);
+        }
     }
 }

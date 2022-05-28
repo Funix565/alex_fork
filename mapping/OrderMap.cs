@@ -8,17 +8,16 @@ using WindowsFormsApp1.domain;
 
 namespace WindowsFormsApp1.mapping
 {
-    public class ProductMap : ClassMap<Product>
+    public class OrderMap : ClassMap<Delivery>
     {
-        ProductMap()
+        public OrderMap()
         {
-            Table("product");
+            Table("delivery");
             Id(x => x.Id).GeneratedBy.Native();
-            Map(x => x.Name);
-            Map(x => x.Count);
-            Map(x => x.Price);
+            Map(x => x.Date);
+            Map(x => x.quantity);
             References(x => x.Provider, "provider_id");
-            HasMany(x => x.Deliveries).Inverse().Cascade.All().Table("delivery");
+            References(x => x.Product, "product_id");
         }
     }
 }

@@ -23,6 +23,14 @@ namespace WindowsFormsApp1.domain
             get { return productList; }
             set { productList = value; }
         }
+
+        // many orders
+        private IList<Delivery> deliveriesList = new List<Delivery>();
+        public virtual IList<Delivery> Deliveries
+        {
+            get { return deliveriesList; }
+            set { deliveriesList = value; }
+        }
     }
 
     public class Product : EntityBase
@@ -33,7 +41,19 @@ namespace WindowsFormsApp1.domain
 
         public virtual Provider Provider { get; set; }
 
+        private IList<Delivery> deliveriesList = new List<Delivery>();
+        public virtual IList<Delivery> Deliveries
+        {
+            get { return deliveriesList; }
+            set { deliveriesList = value; }
+        }
     }
 
-
+    public class Delivery : EntityBase
+    {
+        public virtual string Date { get; set; }
+        public virtual int quantity { get; set; }
+        public virtual Provider Provider { get; set; }
+        public virtual Product Product { get; set; }
+    }
 }
